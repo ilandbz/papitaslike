@@ -8,10 +8,9 @@
       </div>
       <div class="card-body">
         <h2>DATOS ORDEN DE SERVICIO</h2>
-        <form name="ordenform" id="ordenform" action="/guardar_orden" method="POST">
+        <form name="generardeudadform" id="generardeudadform" action="/guardar_orden" method="POST">
           @csrf
           <div class="row">
-            <input type="hidden" name="tipo" id="tipo" value="{{$title}}">
             <div class="col-2 control">
               <label for="entidad_id">ENTIDAD</label>
               <input type="text" class="form-control" name="nombreentidad" id="nombreentidad" value="{{$orden->entidad->nombre}}" readonly>  
@@ -37,7 +36,7 @@
             </div>
             <div class="col-1">
               <label for="nrocuotas">Nro de Cuotas</label>
-              <input type="number" name="nrocuotas" class="form-control" value="1">  
+              <input type="number" name="nrocuotas" id="nrocuotas" class="form-control" value="1">  
             </div>
             <div class="col-1">
                 <label for="frecuencia">Frecuencia</label>
@@ -53,14 +52,13 @@
                 $fechaMasUnDia = date('Y-m-d', strtotime('+1 day', strtotime($fechaActual)));
                 @endphp
                 <label for="frecuencia">Fecha de Vencimiento</label>
-                <input type="date" name="fecha_vencimiento" value="{{$fechaMasUnDia}}" class="form-control">
+                <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" value="{{$fechaMasUnDia}}" class="form-control">
             </div>
           </div>
           <div class="row">
             <div class="col-4">
               <br>
-              <button type="button" class="btn btn-sm btn-primary" id="nuevo_detalle"><i class="fas fa-plus-circle"></i> Agregar Detalle</button>
-              <button type="submit" class="btn btn-sm btn-success">Guardar Orden</button>
+              <button type="submit" class="btn btn-sm btn-success">Generar Deuda</button>
               <br>
             </div>
           </div>
@@ -119,11 +117,26 @@
 <!-- Toastr -->
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 <script>
+    $('#nrocuotas, #frecuencia').on('input', function() {
+      let nrocuotas = parseFloat($('#nrocuotas').val());
+      let frecuencia = $('#frecuencia').val();
+      $.ajax({
+          url: '/deuda/calcular-fecha-vencimiento',
+          method: 'GET',
+          data: {nrocuotas : nrocuotas, frecuencia: frecuencia},
+          dataType: 'json',
+          success: function(respuesta) {
+            $('input[name=fecha_vencimiento]').val(respuesta.fecha_vencimiento)
+          },
+          error: function(xhr, status, error) {
+            var mensajeError = "Ocurrió un error en la solicitud AJAX.";
+            var mensajeDetallado = "Error: " + error + ", Estado: " + status + ", Descripción: " + xhr.statusText;
+            $('#mensaje-error').text(mensajeError);
+            console.log(mensajeDetallado);
+          }
+        })
 
-    $("#frecuencia").on('change', function() {            
- alert('asd')
-    });
-
+    });   
 </script>
 @endsection
 

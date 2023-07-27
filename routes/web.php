@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeudaController;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -68,6 +69,10 @@ Route::group(['prefix' => 'orden', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'deuda', 'middleware' => 'auth'], function () {
     Route::get('/create', [OrdenController::class, 'create_deuda']);
+    Route::get('/calcular-fecha-vencimiento', [OrdenController::class, 'calcular_fechavencimiento']);
+    Route::post('/', [DeudaController::class, 'store']);
+    Route::get('/mostrar', [DeudaController::class, 'show']);
+
 });
 
 Route::group(['prefix' => 'pagos', 'middleware' => 'auth'], function () {

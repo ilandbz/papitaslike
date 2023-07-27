@@ -6,6 +6,7 @@ use App\Models\DetalleOrden;
 use App\Models\Entidad;
 use App\Models\Orden;
 use App\Models\Producto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,10 +42,36 @@ class OrdenController extends Controller
 
 
     public function calcular_fechavencimiento(Request $request){
+        $fechaInicial = date('Y-m-d');
+        $numeroCuotas = $request->nrocuotas;
+        $frecuenciaPago = $request->frecuencia;
+        $fechasVencimiento = [];
 
-        $fechaInicial = $request->fechaInicial;
-        $numeroCuotas = $request->numeroCuotas;
-        $frecuenciaPago = $request->frecuenciaPago;
+        $fechaActual = Carbon::createFromFormat('Y-m-d', $fechaInicial);
+
+        // Calcular la fecha de vencimiento para cada cuota
+        for ($i = 0; $i < $numeroCuotas; $i++) {
+            // Ajustar la frecuencia de pago según la opción seleccionada
+            switch ($frecuenciaPago) {
+                case 'Diario':
+                    $fechaActual->addDay();
+                    break;
+                case 'Semanal':
+                    $fechaActual->addWeek();
+                    break;
+                case 'Mensual':
+                    $fechaActual->addMonth();
+                    break;
+                // Puedes agregar más casos según tus necesidades
+                default:
+                    // Si la opción no coincide con ninguna de las anteriores, puedes manejar el caso aquí
+                    break;
+            }
+            $fechasVencimiento = $fechaActual->format('Y-m-d');
+        }
+    
+        $data['fecha_vencimiento']=$fechasVencimiento;
+        return $data;
 
     }
     public function store(Request $request){
