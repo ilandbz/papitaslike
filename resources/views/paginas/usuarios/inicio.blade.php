@@ -111,8 +111,7 @@
                     '<a id="'+repo.id+'" class="btn btn-warning btn_modificar_usuario mr-1"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
                     '<a id="'+repo.id+'" class="btn btn-primary btn_resetearclave" title="Resetear Clave"><i class="fas fa-sync-alt"></i></a>'+
                   '</div>'
-                  
-                ]).draw();
+                  ]).draw();
                   numero_orden++;
               });
           }

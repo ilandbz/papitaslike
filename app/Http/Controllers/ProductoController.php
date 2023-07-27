@@ -73,14 +73,12 @@ class ProductoController extends Controller
                 'precio.numeric'        => 'El campo precio debe ser numérico.',
                 'unidad_medida.required'     => 'El campo unidad_medida es obligatorio.'
             ]);
-
             $persona = Producto::where('id', $request->id)->update([
                 'nombre'        => $request->nombre,
                 'tipo'          => $request->tipo,
                 'precio'        => $request->precio,
                 'unidad_medida' => $request->unidad_medida
             ]);
-
             return response()->json([
                 'ok' => 1,
                 'mensaje' => 'Actualizacion Satisfactoria'

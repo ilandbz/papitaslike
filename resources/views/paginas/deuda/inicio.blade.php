@@ -4,7 +4,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Lista General de Productos</h3>
+        <h3 class="card-title">Detalle de Deuda por Orden {{$title}}</h3>
       </div>
       <div class="card-body">
           @if (session('success'))
@@ -34,7 +34,6 @@
     </div>
   </div>
 </div>
-@include('paginas.producto.modalproducto')
 @endsection
 @section('script')
 <!-- SweetAlert2 -->

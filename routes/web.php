@@ -3,6 +3,8 @@
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OrdenController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuarioController;
@@ -53,23 +55,25 @@ Route::group(['prefix' => 'entidad', 'middleware' => 'auth'], function () {
     Route::get('/obtener', [EntidadController::class, 'show']);
     Route::post('/eliminar', [EntidadController::class, 'destroy']);
 });
-Route::group(['prefix' => 'compra', 'middleware' => 'auth'], function () {
-    Route::get('/', [ProductoController::class, 'index']);
-    Route::post('/', [ProductoController::class, 'store']);
-    Route::get('/todos', [ProductoController::class, 'lista']);
-    Route::get('/obtener', [ProductoController::class, 'show']);
-    Route::post('/eliminar', [ProductoController::class, 'destroy']);
+Route::group(['prefix' => 'orden', 'middleware' => 'auth'], function () {
+    Route::get('/pedido', [OrdenController::class, 'pedido']);
+    Route::get('/venta', [OrdenController::class, 'venta']);
+    Route::post('/', [OrdenController::class, 'store']);
+    Route::post('/detalles', [OrdenController::class, 'guardardetalle']);
+    Route::get('/pedido-todos', [OrdenController::class, 'listapedido']);
+    Route::get('/venta-todos', [OrdenController::class, 'listaventa']);
+    Route::get('/obtener', [OrdenController::class, 'show']);
+    Route::post('/eliminar', [OrdenController::class, 'destroy']);
 });
 
-Route::group(['prefix' => 'venta', 'middleware' => 'auth'], function () {
-    Route::get('/', [ProductoController::class, 'index']);
-    Route::post('/', [ProductoController::class, 'store']);
-    Route::get('/todos', [ProductoController::class, 'lista']);
-    Route::get('/obtener', [ProductoController::class, 'show']);
-    Route::post('/eliminar', [ProductoController::class, 'destroy']);
+Route::group(['prefix' => 'deuda', 'middleware' => 'auth'], function () {
+    Route::get('/create', [OrdenController::class, 'create_deuda']);
 });
 
-
+Route::group(['prefix' => 'pagos', 'middleware' => 'auth'], function () {
+    Route::get('/pedido', [PagoController::class, 'pedido']);
+    Route::get('/venta', [PagoController::class, 'venta']);   
+});
 
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/', [HomeController::class, 'index'])->middleware('auth');

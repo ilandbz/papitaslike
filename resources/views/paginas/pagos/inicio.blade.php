@@ -4,7 +4,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Lista General de Productos</h3>
+        <h3 class="card-title">Lista General</h3>
       </div>
       <div class="card-body">
           @if (session('success'))
@@ -29,13 +29,16 @@
               </div>
           </div>
         <br>
-        @include('paginas.producto.vistatabla')
+        @include('paginas.pagos.vistatabla')
       </div>
     </div>
   </div>
 </div>
-@include('paginas.producto.modalproducto')
+
+@include('paginas.pagos.modalentidad')
 @endsection
+
+
 @section('script')
 <!-- SweetAlert2 -->
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
@@ -43,19 +46,20 @@
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 <script>
   let csrf_token = $('meta[name="csrf-token"]').attr('content');
-    document.getElementById('productoform').addEventListener('submit', function (event) {
+    document.getElementById('entidadform').addEventListener('submit', function (event) {
         event.preventDefault(); // Evita que el formulario se envíe normalmente
-        var form = document.getElementById('productoform');
+        var form = document.getElementById('entidadform');
         $('.alert-danger').remove();
         $.ajax({
             type:'POST',
+            // datatype: 'json',
             url: this.action,
             data: new FormData(this),
             processData: false,
             contentType: false,
             success: function(data) {
               form.reset();
-              $("#modalproducto").modal('hide');
+              $("#modalentidad").modal('hide');
               cargar_datatable();
               toastr.success(data.mensaje)
             },
@@ -70,40 +74,55 @@
           }
         });
     });
+
     carga_inicial();
     function carga_inicial(){ 
-      $("#tablaproductos").DataTable({
+      $("#tablaordenes").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#tablaproductos_wrapper .col-md-6:eq(0)');
+        }).buttons().container().appendTo('#tablaordenes_wrapper .col-md-6:eq(0)');
       cargar_datatable();
     }
     function cargar_datatable(){
-      var table = $('#tablaproductos').DataTable();
+      var table = $('#tablaordenes').DataTable();
       table.clear();
       $.ajax({
           dataType:'json',
-          url: 'productos/todos',
+          url: '/orden/{{$tipo}}-todos',
           success: function(data) {
             let numero_orden = 1;
-              (data.productos).forEach(function(repo) {
-                  table.row.add([
-                  numero_orden,
-                  repo.nombre,
-                  repo.tipo,
-                  repo.precio,
-                  repo.unidad_medida,
-                  '<div class="btn-group" role="group" aria-label="Basic mixed styles example">'+
-                    '<a id="'+repo.id+'" class="btn btn-danger btn_eliminar_producto mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>'+
-                    '<a id="'+repo.id+'" class="btn btn-warning btn_modificar_producto mr-1"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                  '</div>'
-                ]).draw();
+              (data.ordenes).forEach(function(repo) {
+                var botones = '<div class="btn-group" role="group" aria-label="Basic mixed styles example">' +
+                              '<a id="' + repo.id + '" class="btn btn-danger btn_eliminar_orden mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
+                              '<a id="' + repo.id + '" class="btn btn-warning btn_modificar_orden mr-1"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                              if (repo.modopago == 'Cuotas') {
+                                if(repo.deuda_count>0){
+                                  botones += '<a id="' + repo.id + '" class="btn btn-info btn_realizar_pago mr-1" title="Pagar"><i class="fas fa-money-bill"></i></a>';
+                                }else{
+                                  botones += '<a href=/deuda/create?id=' + repo.id + ' class="btn btn-primary btn_generar_deuda mr-1" title="Generar Deuda"><i class="fas fa-file-invoice-dollar"></i></a>';
+                                }
+                              }
+                              botones += '</div>';
+                              table.row.add([
+                                  numero_orden,
+                                  repo.usuario.name,
+                                  repo.fecha,
+                                  repo.entidad.nombre,
+                                  repo.total,
+                                  repo.modopago,
+                                  botones
+                              ]).draw();
+
+
+                
                   numero_orden++;
               });
           }
       })
     }
-    $("#tablaproductos").on('click', '.btn_eliminar_producto', function() {            
+
+
+    $("#tablaordenes").on('click', '.btn_eliminar_orden', function() {            
         var usuario_id = $(this).attr('id');       
         Swal.fire({
           icon: 'question',
@@ -121,7 +140,7 @@
             $.ajax({
                 type:'POST',
                 dataType:'json',
-                url: 'producto/eliminar',
+                url: 'eliminar',
                 data: {
                   id: usuario_id,
                   _token: csrf_token
@@ -138,35 +157,38 @@
           }
         });
     });
+    $("#tablaordenes").on('click', '.btn_generar_deuda', function() { 
+      var orden_id = $(this).val();
 
-    function limpiarformusuario(){
-      $('input[name=id]').val('');  
-      $('input[name=nombre]').val('')
-      $('select[name=tipo]').val('INSUMO')
-      $('input[name=precio]').val('')
-    }
+    });
 
-$('#btn-nuevo-producto').click(function (){
-  limpiarformusuario();
-  $("#titulo-modal").text('Nuevo Producto');
-  $("#modalproducto").modal('show');
-});
-
-$("#tablaproductos").on('click', '.btn_modificar_producto', function() { 
+    
+function limpiarformusuario(){
+  $('input[name=ruc_dni]').val('');  
+  $('input[name=nombre]').val('')
+  $('input[name=representante]').val('')
+  $('input[name=correo]').val('')
+  $('input[name=telefono]').val('')
+  $('input[name=direccion]').val('')
+}
+$("#tablaordenes").on('click', '.btn_modificar_entidad', function() { 
   $('.alert-danger').remove();
   $("#titulo-modal").text('Modificar Docente');
-  var usuario_id = $(this).attr('id'); 
+  var entidad_id = $(this).attr('id'); 
   $.ajax({
-    url: 'usuarios/obtener',
+    url: 'obtener',
     method: 'GET', // o GET, PUT, DELETE, según tus necesidades
-    data: {id : usuario_id},
+    data: {id : entidad_id},
     dataType: 'json', // o 'text', 'html', según el tipo de respuesta esperada
     success: function(respuesta) {
-      $('input[name=id]').val(respuesta.id)
+      $('input[name=id]').val(respuesta.id); 
+      $('input[name=ruc_dni]').val(respuesta.ruc_dni);  
       $('input[name=nombre]').val(respuesta.nombre)
-      $('select[name=tipo]').val(respuesta.tipo)
-      $('input[name=precio]').val(respuesta.precio)
-      $('select[name=unidad_medida]').val(respuesta.unidad_medida)
+      $('input[name=representante]').val(respuesta.representante)
+      $('input[name=correo]').val(respuesta.correo)
+      $('input[name=telefono]').val(respuesta.telefono)
+      $('input[name=direccion]').val(respuesta.direccion)
+      $('input[name=tipo]').val(respuesta.tipo)
     },
     error: function(xhr, status, error) {
       var mensajeError = "Ocurrió un error en la solicitud AJAX.";
@@ -181,7 +203,7 @@ $("#tablaproductos").on('click', '.btn_modificar_producto', function() {
     console.log(mensajeDetallado);
     }
   })
-  $("#modalproducto").modal('show');
+  $("#modalentidad").modal('show');
 });
 </script>
 @endsection

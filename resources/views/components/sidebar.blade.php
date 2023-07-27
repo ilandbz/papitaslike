@@ -26,19 +26,19 @@
           <a href="#" class="nav-link">
             <i class="fas fa-shopping-cart"></i>
             <p>
-              Compras
+              Pedido
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="programas" class="nav-link">
+              <a href="/orden/pedido" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Orden de Compra</p>
+                <p>Orden de Pedido</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="aulas" class="nav-link">
+              <a href="/pagos/pedido" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pagos</p>
               </a>
@@ -55,13 +55,13 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="horario" class="nav-link">
+              <a href="/orden/venta" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Orden de Venta</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="horario" class="nav-link">
+              <a href="/pagos/venta" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pagos</p>
               </a>

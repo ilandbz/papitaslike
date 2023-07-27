@@ -2,91 +2,171 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetalleOrden;
+use App\Models\Entidad;
 use App\Models\Orden;
+use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrdenController extends Controller
 {
     public function pedido()
     {
         $data['title'] = 'Pedido';
+        $data['productos'] = Producto::where('tipo', 'Insumo')->get();
+        $data['entidades'] = Entidad::where('tipo', 'Proveedor')->get();
         return view('paginas.orden.inicio', $data);
     }
     public function venta()
     {
         $data['title'] = 'Venta';
+        $data['productos'] = Producto::where('tipo', 'Producto')->get();
+        $data['entidades'] = Entidad::where('tipo', 'Distribuidor')->get();
         return view('paginas.orden.inicio', $data);
     }    
     public function listapedido(){
-        $data['ordenes'] = Orden::where('tipo', 'Pedido')->get();
+        $data['ordenes'] = Orden::with(['usuario:id,name', 'entidad:id,ruc_dni,nombre'])->where('tipo', 'Pedido')->withCount('deuda')->get();
         return $data;
     }
     public function listaventa(){
-        $data['ordenes'] = Orden::where('tipo', 'Venta')->get();
+        $data['ordenes'] = Orden::with(['usuario:id,name', 'entidad:id,ruc_dni,nombre'])->where('tipo', 'Venta')->withCount('deuda')->get();
         return $data;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-
+    public function create_deuda(Request $request){
+        $data['title'] = 'Deudas';
+        $data['orden'] = Orden::with(['entidad:id,nombre', 'detalles.producto','detalles'])->where('id', $request->id)->first();
+        return view('paginas.deuda.create', $data);
+    }
 
 
+    public function calcular_fechavencimiento(Request $request){
+
+        $fechaInicial = $request->fechaInicial;
+        $numeroCuotas = $request->numeroCuotas;
+        $frecuenciaPago = $request->frecuenciaPago;
+
+    }
+    public function store(Request $request){
         if(!$request->id){
             $request->validate([
-                'usuario_id'            => 'required',
+                'usuario_id'         => 'required',
                 'fecha'              => 'required',
-                'entidad_id'            => 'required|numeric',
-                'total'     => 'required',
-                'tipo'      =>  'required',
-                'modopago'  => 'required'
+                'entidad_id'         => 'required|numeric',
+                'total'              => 'required',
+                'tipo'               => 'required',
+                'modopago'           => 'required'
             ], [
-                'nombre.required'   => 'El campo nombre es obligatorio.',
-                'tipo.required' => 'El campo tipo es obligatorio.',
-                'precio.required'       => 'El campo precio es obligatorio.',
-                'precio.numeric'        => 'El campo precio debe ser numérico.',
-                'unidad_medida.required'     => 'El campo unidad_medida es obligatorio.'
+                'required'   => 'El campo es obligatorio.'
             ]);
-            $producto = Orden::create([
-                'nombre'        => $request->nombre,
-                'tipo'          => $request->tipo,
-                'precio'        => $request->precio,
-                'unidad_medida' => $request->unidad_medida
+            $orden = Orden::create([
+                'usuario_id'        => $request->usuario_id,
+                'fecha'             => $request->fecha,
+                'entidad_id'        => $request->entidad_id,
+                'total'             => $request->total,
+                'tipo'              => $request->tipo,
+                'modopago'          => $request->modopago,
             ]);
             return response()->json([
                 'ok' => 1,
                 'mensaje' => 'Registro Satisfactorio'
             ],201);
         }else{
-
+            $request->validate([
+                'usuario_id'         => 'required',
+                'fecha'              => 'required',
+                'entidad_id'         => 'required|numeric',
+                'total'              => 'required',
+                'tipo'               => 'required',
+                'modopago'           => 'required'
+            ], [
+                'required'   => 'El campo es obligatorio.'
+            ]);
+            $orden = Orden::where('id', $request->id)->update([
+                'usuario_id'        => $request->usuario_id,
+                'fecha'             => $request->fecha,
+                'entidad_id'        => $request->entidad_id,
+                'total'             => $request->total,
+                'tipo'              => $request->tipo,
+                'modopago'          => $request->modopago
+            ]);
+            return response()->json([
+                'ok' => 1,
+                'mensaje' => 'Actualizacion Satisfactoria'
+            ],201);
         }
     }
+    public function guardardetalle(Request $request){
 
-    /**
-     * Display the specified resource.
-     */
+        $detalles = $request->detalles;
+        $usuario_id = Auth::user()->id;
+        if(!$request->id){
+            $request->validate([
+                'fecha'              => 'required',
+                'entidad_id'         => 'required|numeric',
+                'total'              => 'required|numeric|min:1',
+                'tipo'               => 'required',
+                'modopago'           => 'required'
+            ], [
+                'required'   => 'El campo es obligatorio.',
+                'total.min'  => 'El valor del total no es valido'
+            ]);
+            $orden = Orden::create([
+                'usuario_id'   => $usuario_id,
+                'fecha'        => $request->fecha,
+                'entidad_id'   => $request->entidad_id,
+                'total'        => $request->total,
+                'tipo'         => $request->tipo,
+                'modopago'     => $request->modopago
+            ]);
+            foreach ($detalles as $detalle) {
+                DetalleOrden::create([
+                    'orden_id' => $orden->id,
+                    'producto_id' => $detalle['producto_id'],
+                    'cantidad' => $detalle['cantidad'],
+                    'precio' => $detalle['precio'],
+                    'subtotal' => $detalle['subtotal'],
+                ]);
+            }
+            return response()->json([
+                'ok' => 1,
+                'mensaje' => 'Registro Satisfactorio'
+            ],201);
+        }else{
+            $request->validate([
+                'fecha'              => 'required',
+                'entidad_id'         => 'required|numeric',
+                'total'              => 'required|numeric|min:1',
+                'tipo'               => 'required',
+                'modopago'           => 'required'
+            ], [
+                'required'   => 'El campo es obligatorio.',
+                'total.min'  => 'El valor del total no es valido'
+            ]);
+            $orden = Producto::where('id', $request->id)->update([
+                'usuario_id'   => $usuario_id,
+                'fecha'        => $request->fecha,
+                'entidad_id'   => $request->entidad_id,
+                'total'        => $request->total,
+                'tipo'         => $request->tipo,
+                'modopago'     => $request->modopago
+            ]);
+            return response()->json([
+                'ok' => 1,
+                'mensaje' => 'Actualizacion Satisfactoria'
+            ],201);
+        }
+    }
     public function show(Request $request){
-        $producto = Orden::where('id',$request->id)->first();
-        return response()->json($producto, 200);
+        $orden = Orden::where('id',$request->id)->first();
+        return response()->json($orden, 200);
     }
+    public function update(Request $request, string $id){
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        $docente = Orden::where('id',$request->id)->first();
-        $docente->delete();
+    public function destroy(Request $request){
+        $orden = Orden::where('id',$request->id)->first();
+        $orden->delete();
         return response()->json([
             'ok' => 1,
             'mensaje' => 'Registro Eliminado'
