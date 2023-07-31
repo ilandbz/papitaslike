@@ -121,7 +121,7 @@
             $.ajax({
                 type:'POST',
                 dataType:'json',
-                url: 'producto/eliminar',
+                url: 'productos/eliminar',
                 data: {
                   id: usuario_id,
                   _token: csrf_token
