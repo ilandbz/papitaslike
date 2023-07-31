@@ -23,9 +23,9 @@
           @endif
           <div class="input-group">
               <div class="input-group-append pull-right">
-                  <button class="btn btn-lg btn-warning" id="btn-nuevo-producto">
+                  <a href="/orden/{{$tipo}}" class="btn btn-lg btn-warning" id="btn-nuevo-producto">
                       Nuevo Registro <i class="fas fa-user-plus"></i>
-                  </button>
+                  </a>
               </div>
           </div>
         <br>
@@ -93,11 +93,10 @@
             let numero_orden = 1;
               (data.ordenes).forEach(function(repo) {
                 var botones = '<div class="btn-group" role="group" aria-label="Basic mixed styles example">' +
-                              '<a id="' + repo.id + '" class="btn btn-danger btn_eliminar_orden mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>' +
-                              '<a id="' + repo.id + '" class="btn btn-warning btn_modificar_orden mr-1"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                              '<a id="' + repo.id + '" class="btn btn-danger btn_eliminar_orden mr-1"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                               if (repo.modopago == 'Cuotas') {
                                 if(repo.deuda_count>0){
-                                  botones += '<a id="' + repo.id + '" class="btn btn-info btn_realizar_pago mr-1" title="Pagar"><i class="fas fa-money-bill"></i></a>';
+                                  botones += '<a href="/deuda/mostrar?id=' + repo.id + '" class="btn btn-info btn_ver_deuda mr-1" title="Pagar"><i class="fas fa-money-bill"></i></a>';
                                 }else{
                                   botones += '<a href=/deuda/create?id=' + repo.id + ' class="btn btn-primary btn_generar_deuda mr-1" title="Generar Deuda"><i class="fas fa-file-invoice-dollar"></i></a>';
                                 }
@@ -157,7 +156,7 @@
           }
         });
     });
-    $("#tablaordenes").on('click', '.btn_generar_deuda', function() { 
+    $("#tablaordenes").on('click', '.btn_ver_deuda', function() { 
       var orden_id = $(this).val();
 
     });

@@ -16,7 +16,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" style="background: url('imagenes/texturafondo.jpeg')">
 <div class="login-box">
   <div class="login-logo">
     <a href="index2.html"><img src="imagenes/logo.png" alt="" width="280px"></a>

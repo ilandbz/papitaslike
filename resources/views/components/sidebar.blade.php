@@ -85,21 +85,21 @@
           </a>
         </li> 
         <li class="nav-item">
-          <a href="productos" class="nav-link {{ request()->is('docentes') ? 'active' : '' }}">
+          <a href="/productos" class="nav-link {{ request()->is('docentes') ? 'active' : '' }}">
             <i class="fas fa-box"></i>
             <p>
               Productos
             </p>
           </a>
         </li>            
-        <li class="nav-item">
+        {{-- <li class="nav-item">
           <a href="reporte" class="nav-link {{ request()->is('docentes') ? 'active' : '' }}">
             <i class="fas fa-chart-bar"></i>
             <p>
               Reportes
             </p>
           </a>
-        </li>                
+        </li>                 --}}
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

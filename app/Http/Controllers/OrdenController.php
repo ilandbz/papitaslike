@@ -10,17 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrdenController extends Controller
-{
-    public function pedido()
-    {
+class OrdenController extends Controller{
+    public function pedido(){
         $data['title'] = 'Pedido';
         $data['productos'] = Producto::where('tipo', 'Insumo')->get();
         $data['entidades'] = Entidad::where('tipo', 'Proveedor')->get();
         return view('paginas.orden.inicio', $data);
     }
-    public function venta()
-    {
+    public function venta(){
         $data['title'] = 'Venta';
         $data['productos'] = Producto::where('tipo', 'Producto')->get();
         $data['entidades'] = Entidad::where('tipo', 'Distribuidor')->get();
@@ -39,19 +36,13 @@ class OrdenController extends Controller
         $data['orden'] = Orden::with(['entidad:id,nombre', 'detalles.producto','detalles'])->where('id', $request->id)->first();
         return view('paginas.deuda.create', $data);
     }
-
-
     public function calcular_fechavencimiento(Request $request){
         $fechaInicial = date('Y-m-d');
         $numeroCuotas = $request->nrocuotas;
         $frecuenciaPago = $request->frecuencia;
         $fechasVencimiento = [];
-
         $fechaActual = Carbon::createFromFormat('Y-m-d', $fechaInicial);
-
-        // Calcular la fecha de vencimiento para cada cuota
         for ($i = 0; $i < $numeroCuotas; $i++) {
-            // Ajustar la frecuencia de pago según la opción seleccionada
             switch ($frecuenciaPago) {
                 case 'Diario':
                     $fechaActual->addDay();
@@ -62,17 +53,13 @@ class OrdenController extends Controller
                 case 'Mensual':
                     $fechaActual->addMonth();
                     break;
-                // Puedes agregar más casos según tus necesidades
                 default:
-                    // Si la opción no coincide con ninguna de las anteriores, puedes manejar el caso aquí
                     break;
             }
             $fechasVencimiento = $fechaActual->format('Y-m-d');
         }
-    
         $data['fecha_vencimiento']=$fechasVencimiento;
         return $data;
-
     }
     public function store(Request $request){
         if(!$request->id){
@@ -124,7 +111,6 @@ class OrdenController extends Controller
         }
     }
     public function guardardetalle(Request $request){
-
         $detalles = $request->detalles;
         $usuario_id = Auth::user()->id;
         if(!$request->id){

@@ -8,11 +8,14 @@
       </div>
       <div class="card-body">
         <h2>DATOS ORDEN DE SERVICIO</h2>
-        <form name="generardeudadform" id="generardeudadform" action="/guardar_orden" method="POST">
+        <form name="generardeudadform" id="generardeudadform" action="/deuda" method="POST">
           @csrf
           <div class="row">
             <div class="col-2 control">
               <label for="entidad_id">ENTIDAD</label>
+              <input type="hidden" name="orden_id" id="orden_id" value="{{$orden->id}}">
+              <input type="hidden" name="entidad_id" id="entidad_id" value="{{$orden->entidad_id}}">
+              <input type="hidden" name="total" id="total" value="{{$orden->total}}">
               <input type="text" class="form-control" name="nombreentidad" id="nombreentidad" value="{{$orden->entidad->nombre}}" readonly>  
             </div>
             <div class="col-2 control">
@@ -117,6 +120,34 @@
 <!-- Toastr -->
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 <script>
+    document.getElementById('generardeudadform').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+        var form = document.getElementById('generardeudadform');
+        $('.alert-danger').remove();
+        $.ajax({
+            type:'POST',
+            url: this.action,
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function(data) {             
+              console.log(data.deuda_id)
+              toastr.success(data.mensaje)
+            },
+            error: function(xhr) {
+              let res = xhr.responseJSON
+              if($.isEmptyObject(res) === false) {
+                  $.each(res.errors,function (key, value){
+                      $("input[name='"+key+"']").closest('.form-group')
+                      .append('<div class="alert alert-danger" role="alert">'+ value+ '</div>')
+                  });
+              }
+          }
+        });
+    });
+
+
+
     $('#nrocuotas, #frecuencia').on('input', function() {
       let nrocuotas = parseFloat($('#nrocuotas').val());
       let frecuencia = $('#frecuencia').val();

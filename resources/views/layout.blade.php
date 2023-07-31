@@ -117,5 +117,30 @@
 
 @yield('script')
 
+
+<script>
+  cargar_vencidos();
+  function cargar_vencidos() {
+  $.ajax({
+    dataType: 'json',
+    url: '/deuda/listavencidas',
+    success: function(data) {
+      let numero_orden = 1;
+      let cantidadRegistros = data.registros.length;
+      $('#cantnotificaciones').text(cantidadRegistros);
+
+      (data.registros).forEach(function(repo) {
+        let entidad = repo.orden.entidad;
+        let bloque = '<div class="dropdown-divider"></div>' +
+                     '<a href="/deuda/mostrar?id='+ repo.orden_id +'" class="dropdown-item">' +
+                     '<i class="fas fa-clock"></i> S/.' + repo.orden.total + ' ' + entidad.nombre + // Agregamos el operador '+' aquí
+                     '</a>';
+        $('#notificaciones').append(bloque); // Utilizamos "append" en lugar de "html" para agregar el bloque al contenedor
+      });
+    }
+  });
+}
+</script>
+
 </body>
 </html>

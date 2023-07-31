@@ -29,5 +29,12 @@ class Orden extends Model
     {
         return $this->hasMany(DetalleOrden::class);
     }    
-
+    public function detallesdeuda(): HasMany
+    {
+        return $this->hasMany(DetalleDeuda::class);
+    }
+    public function detallespagos(): HasMany
+    {
+        return $this->hasMany(Pago::class);
+    }    
 }

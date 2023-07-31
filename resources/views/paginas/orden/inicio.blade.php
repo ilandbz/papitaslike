@@ -98,53 +98,53 @@
     document.getElementById('ordenform').addEventListener('submit', function (event) {
     var table = $('#detalles-table').DataTable();
     $('.alert-danger').remove();
-        var fecha = $('#fecha').val();
-        var entidad_id = $('#entidad_id').val();
-        var total = $('#total').val();
-        var tipo = $('#tipo').val();
-        var modopago = $('#modopago').val();
+      var fecha = $('#fecha').val();
+      var entidad_id = $('#entidad_id').val();
+      var total = $('#total').val();
+      var tipo = $('#tipo').val();
+      var modopago = $('#modopago').val();
 
-        event.preventDefault();
-        var form = document.getElementById('ordenform');
-        var detalles = [];
-        table.rows().every(function() {
-            var data = this.data();
-            detalles.push({
-                producto_id: data[1],
-                cantidad: data[3],
-                precio: data[4],
-                subtotal: data[5]
-            });
-        });
-        $.ajax({
-            method: 'POST',
-            url: '/orden/detalles',
-            data: {
-              fecha : fecha,
-              entidad_id : entidad_id,
-              total : total,
-              tipo : tipo,
-              modopago : modopago,
-              detalles: detalles,  
-              _token: csrf_token
-            },
-            success: function(response) {
-              form.reset();
-              table.clear().draw();
-              toastr.success(response.mensaje)
-            },
-            error: function(xhr, status, error) {
-              let res = xhr.responseJSON
-              if($.isEmptyObject(res) === false){
-                $.each(res.errors,function (key, value){
-                  $("input[name='" + key + "'], select[name='" + key + "']").each(function() {
-                    $(this).closest('.control')
-                      .append('<div class="alert alert-danger" role="alert">'+ value+ '</div>')
-                  });
+      event.preventDefault();
+      var form = document.getElementById('ordenform');
+      var detalles = [];
+      table.rows().every(function() {
+          var data = this.data();
+          detalles.push({
+              producto_id: data[1],
+              cantidad: data[3],
+              precio: data[4],
+              subtotal: data[5]
+          });
+      });
+      $.ajax({
+          method: 'POST',
+          url: '/orden/detalles',
+          data: {
+            fecha : fecha,
+            entidad_id : entidad_id,
+            total : total,
+            tipo : tipo,
+            modopago : modopago,
+            detalles: detalles,  
+            _token: csrf_token
+          },
+          success: function(response) {
+            form.reset();
+            table.clear().draw();
+            toastr.success(response.mensaje)
+          },
+          error: function(xhr, status, error) {
+            let res = xhr.responseJSON
+            if($.isEmptyObject(res) === false){
+              $.each(res.errors,function (key, value){
+                $("input[name='" + key + "'], select[name='" + key + "']").each(function() {
+                  $(this).closest('.control')
+                    .append('<div class="alert alert-danger" role="alert">'+ value+ '</div>')
                 });
-              }
+              });
             }
-        });
+          }
+      });
     });
 
     let nroorden=0;

@@ -72,12 +72,14 @@ Route::group(['prefix' => 'deuda', 'middleware' => 'auth'], function () {
     Route::get('/calcular-fecha-vencimiento', [OrdenController::class, 'calcular_fechavencimiento']);
     Route::post('/', [DeudaController::class, 'store']);
     Route::get('/mostrar', [DeudaController::class, 'show']);
-
+    Route::get('listavencidas', [DeudaController::class, 'lista_vencidos']);
 });
 
 Route::group(['prefix' => 'pagos', 'middleware' => 'auth'], function () {
     Route::get('/pedido', [PagoController::class, 'pedido']);
-    Route::get('/venta', [PagoController::class, 'venta']);   
+    Route::get('/venta', [PagoController::class, 'venta']);
+    Route::post('/guardar', [PagoController::class, 'store']);
+    Route::get('/listapagos', [PagoController::class, 'lista']);
 });
 
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
