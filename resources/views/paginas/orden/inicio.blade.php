@@ -4,7 +4,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">ORDEN DE PEDIDO</h3>
+        <h3 class="card-title">ORDEN DE VENTA</h3>
       </div>
       <div class="card-body">
         <h2>Ingresar Orden de Pedido</h2>
