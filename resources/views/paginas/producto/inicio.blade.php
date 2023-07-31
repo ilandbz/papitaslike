@@ -154,7 +154,7 @@ $('#btn-nuevo-producto').click(function (){
 
 $("#tablaproductos").on('click', '.btn_modificar_producto', function() { 
   $('.alert-danger').remove();
-  $("#titulo-modal").text('Modificar Docente');
+  $("#titulo-modal").text('Modificar Producto');
   var usuario_id = $(this).attr('id'); 
   $.ajax({
     url: 'usuarios/obtener',
