@@ -127,7 +127,16 @@
     success: function(data) {
       let numero_orden = 1;
       let cantidadRegistros = data.registros.length;
-      $('#cantnotificaciones').text(cantidadRegistros);
+      var divcantidad = document.getElementById('cantnotificaciones');
+
+
+      divcantidad.innerText = cantidadRegistros.toString();
+
+
+if (cantidadRegistros==0) {
+
+  divcantidad.classList.remove('badge', 'badge-danger');
+}
 
       (data.registros).forEach(function(repo) {
         let entidad = repo.orden.entidad;
