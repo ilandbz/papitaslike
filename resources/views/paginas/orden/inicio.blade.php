@@ -7,7 +7,7 @@
         <h3 class="card-title">ORDEN DE VENTA</h3>
       </div>
       <div class="card-body">
-        <h2>Ingresar Orden de Pedido</h2>
+        <h2>Ingresar Orden de Venta</h2>
         <form name="ordenform" id="ordenform" action="/guardar_orden" method="POST">
           @csrf
           <div class="row">
