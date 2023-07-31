@@ -5,7 +5,7 @@
     <div class="row">
       <!-- Left col -->
       <section class="col-lg-7 connectedSortable">
-        <img src="imagenes/img_a.jpeg" alt="" class="img-fluid">
+        <img src="imagenes/img_a.jpeg" alt="" class="img-fluid rounded mx-auto d-block">
       </section>
       
       <!-- /.Left col -->
