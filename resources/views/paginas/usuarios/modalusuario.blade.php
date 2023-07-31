@@ -13,7 +13,8 @@
               <div class="card-body">
                 <div class="form-group">
                   <label for="name">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Apellido Paterno">
+                  <input type="hidden" name="id" id="id" value="">
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Nombre">
                 </div>                        
                 <div class="form-group">
                   <label for="dni">EMAIL</label>

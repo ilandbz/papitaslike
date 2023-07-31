@@ -172,7 +172,7 @@ function limpiarformusuario(){
 }
 $("#tablaordenes").on('click', '.btn_modificar_entidad', function() { 
   $('.alert-danger').remove();
-  $("#titulo-modal").text('Modificar Docente');
+  $("#titulo-modal").text('Modificar Entidad');
   var entidad_id = $(this).attr('id'); 
   $.ajax({
     url: 'obtener',

@@ -233,7 +233,7 @@ $('#btn-nuevo-usuario').click(function (){
 
 $("#tablausuarios").on('click', '.btn_modificar_usuario', function() { 
   $('.alert-danger').remove();
-  $("#titulo-modal").text('Modificar Docente');
+  $("#titulo-modal").text('Modificar Usuario');
   document.getElementById('grupocontrasenha').classList.add('d-none');
   var usuario_id = $(this).attr('id'); 
   $.ajax({
@@ -243,12 +243,8 @@ $("#tablausuarios").on('click', '.btn_modificar_usuario', function() {
     dataType: 'json', // o 'text', 'html', según el tipo de respuesta esperada
     success: function(respuesta) {
       $('input[name=id]').val(respuesta.id)
-      $('input[name=dni]').val(respuesta.persona.dni)
-      $('input[name=nombres]').val(respuesta.persona.nombres)
-      $('input[name=apellidop]').val(respuesta.persona.apellidop)
-      $('input[name=apellidom]').val(respuesta.persona.apellidom)
+      $('input[name=name]').val(respuesta.name)
       $('input[name=email]').val(respuesta.email)
-      $('select[name=role_id]').val(respuesta.role_id)
     },
     error: function(xhr, status, error) {
       var mensajeError = "Ocurrió un error en la solicitud AJAX.";

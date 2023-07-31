@@ -3,7 +3,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-warning">
-            <h4 class="modal-title tex-dark" id="titulo-modal">Nuevo Docente</h4>
+            <h4 class="modal-title tex-dark" id="titulo-modal">Nuevo Detalle</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
