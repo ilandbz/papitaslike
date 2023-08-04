@@ -61,7 +61,8 @@ class ProductoController extends Controller
             $request->validate([
                 'tipo' => 'required',
                 'precio' => 'required',
-                'precio' => 'unidad_medida',
+                'precio' => 'required',
+                'unidad_medida' => 'required',
                 'nombre'       => [
                     'required',
                     Rule::unique('productos')->ignore($request->id)

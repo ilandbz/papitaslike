@@ -155,11 +155,11 @@ $('#btn-nuevo-producto').click(function (){
 $("#tablaproductos").on('click', '.btn_modificar_producto', function() { 
   $('.alert-danger').remove();
   $("#titulo-modal").text('Modificar Producto');
-  var usuario_id = $(this).attr('id'); 
+  var producto_id = $(this).attr('id'); 
   $.ajax({
-    url: 'usuarios/obtener',
+    url: 'productos/obtener',
     method: 'GET', // o GET, PUT, DELETE, según tus necesidades
-    data: {id : usuario_id},
+    data: {id : producto_id},
     dataType: 'json', // o 'text', 'html', según el tipo de respuesta esperada
     success: function(respuesta) {
       $('input[name=id]').val(respuesta.id)

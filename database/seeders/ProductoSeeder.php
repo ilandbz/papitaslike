@@ -17,31 +17,31 @@ class ProductoSeeder extends Seeder
             'nombre'       => 'Papas',
             'tipo'         => 'Insumo',
             'precio'       => 0.30,
-            'unidad_medida'=> 'Saco'
+            'unidad_medida'=> 'SACO'
         ]);
         Producto::firstOrcreate([
             'nombre'       => 'Sal',
             'tipo'         => 'Insumo',
             'precio'       => 3.00,
-            'unidad_medida'=> 'Caja'
+            'unidad_medida'=> 'CAJA'
         ]);
         Producto::firstOrcreate([
             'nombre'       => 'Saborizante',
             'tipo'         => 'Insumo',
             'precio'       => 5.00,
-            'unidad_medida'=> 'Caja'
+            'unidad_medida'=> 'CAJA'
         ]); 
         Producto::firstOrcreate([
             'nombre'       => 'Papitas Saladas',
             'tipo'         => 'Producto',
             'precio'       => 30,
-            'unidad_medida'=> 'Caja'
+            'unidad_medida'=> 'CAJA'
         ]); 
         Producto::firstOrcreate([
             'nombre'       => 'Papitas Picantes',
             'tipo'         => 'Producto',
             'precio'       => 30,
-            'unidad_medida'=> 'Caja'
+            'unidad_medida'=> 'CAJA'
         ]);                     
     }
 }

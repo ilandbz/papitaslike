@@ -78,9 +78,6 @@
       </form>
 
 
-      <p class="mb-1">
-        <a href="forgot-password.html">Olvide Mi clave</a>
-      </p>
     </div>
     <!-- /.login-card-body -->
   </div>
