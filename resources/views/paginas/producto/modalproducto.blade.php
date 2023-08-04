@@ -19,8 +19,8 @@
                 <div class="form-group">
                   <label for="tipo">Tipo</label>
                   <select name="tipo" id="tipo" class="form-control">
-                    <option value="Insumo">Insumo</option>
-                    <option value="Producto">Producto</option>
+                    <option value="INSUMO">INSUMO</option>
+                    <option value="PRODUCTO">PRODUCTO</option>
                   </select>
                 </div>
                 <div class="form-group">
